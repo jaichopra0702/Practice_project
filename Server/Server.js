@@ -1,7 +1,10 @@
 const express = require('express');
-const connectDb=require("mongodb://localhost:27017/");
-const errorHandler=require();
+const connectDb = require("./config/dbConnection.js");
+const errorHandler = require("./middlewares/errorHandler.js");
 const cors=require("cors");
+
+const dotenv=require("dotenv");
+dotenv.config();
 
 connectDb();
 const app = express();
