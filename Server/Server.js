@@ -1,13 +1,12 @@
-const express = require('express');
-const connectDb = require("./config/dbConnection.js");
-const errorHandler = require("./middlewares/errorHandler.js");
+const express = require("express");
+const connectDb = require("./config/dbConnection");
+const errorHandler = require("./middlewares/errorHandler");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
 const hbs = require("hbs");
 
 dotenv.config();
-
 connectDb(); // Connect to the database
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -44,8 +43,9 @@ app.get("/alluser", (req, res) => {
     });
 });
 
-// Register route
-app.use("/api/register", require("./routes/userRoutes"));
+// User routes
+app.use("/api/register", require("./routes/userRoutes")); // Registration route
+app.use("/api/login", require("./routes/userRoutes")); // Login route
 
 // Error handling middleware
 app.use(errorHandler); // Use your error handler middleware
