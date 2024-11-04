@@ -4,10 +4,11 @@ const errorHandler = require("./middlewares/errorHandler.js");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
+const hbs = require("hbs");
 
 dotenv.config();
 
-connectDb();
+connectDb(); // Connect to the database
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -24,25 +25,30 @@ app.get('/', (req, res) => {
     res.send('Working');
 });
 
-app.get('/home', (req, res) => {
+// Register Handlebars partials
+hbs.registerPartials(path.join(__dirname, 'views/partials'));
+
+// Home route
+app.get("/home", (req, res) => {
     res.render("home", {
-        username: "Jai",
-        posts: "flana dimkana"
+        username: "Jai Chopra",
+        posts: "time pass"
     });
 });
 
-app.get('/allusers', (req, res) => {
-    console.log("All users route hit"); // Check if this message appears in your console
-    const users = [
-        { name: "Jai", age: 19 },
-        { name: "Ananthu", age: 22 }
-    ];
-    console.log(users); // Log the users array
-    res.render("home", { users });
+// All users route (Assuming 'users' is defined somewhere)
+app.get("/alluser", (req, res) => {
+    const users = []; // Replace with actual users array
+    res.render("alluser", {
+        users: users, 
+    });
 });
 
+// Register route
+app.use("/api/register", require("./routes/userRoutes"));
+
 // Error handling middleware
-app.use(errorHandler);
+app.use(errorHandler); // Use your error handler middleware
 
 // Start the server
 app.listen(PORT, () => {
