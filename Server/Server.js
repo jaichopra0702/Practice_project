@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 const path = require("path");
 const hbs = require("hbs");
 const multer = require('multer');
+
 const File = require('./model/File'); // Import the File model
 
 dotenv.config();
@@ -51,6 +52,18 @@ app.get("/home", async (req, res) => {
         files: files 
     });
 });
+
+// All users route (Assuming 'users' is defined somewhere)
+app.get("/alluser", (req, res) => {
+    const users = []; // Replace with actual users array
+    res.render("alluser", {
+        users: users, 
+    });
+});
+
+
+app.use("/api/register", require("./routes/userRoutes")); // Registration route
+app.use("/api/login", require("./routes/userRoutes")); // Login route
 
 // Route to handle file upload and save metadata in MongoDB
 app.post('/profile', upload.single('avatar'), async (req, res) => {
