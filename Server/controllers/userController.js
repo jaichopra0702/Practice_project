@@ -84,4 +84,38 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "Login successful", token });
 });
 
-module.exports = { registerUser, loginUser };
+const myAccount = asyncHandler(async (req, res) => {
+    // The userId is available in req.user after successful token validation
+    const userId = req.user.userId; // This comes from the 'validateJwtToken' middleware
+
+    // Fetch the user by the userId (from the decoded token)
+    const user = await User.findById(userId);
+
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    // Send the user information (excluding the password) in the response
+    // res.status(200).json({
+    //     user: {
+    //         id: user._id,
+    //         firstName: user.firstName,
+    //         lastName: user.lastName,
+    //         age: user.age,
+    //         gender: user.gender,
+    //         bloodGroup: user.bloodGroup,
+    //         email: user.email,
+    //         phoneNumber: user.phoneNumber,
+    //         createdAt: user.createdAt,
+    //         updatedAt: user.updatedAt
+    //     }
+    // });
+    Object.assign(user, req.body);
+
+    await user.save();
+
+    res.send(user);
+    
+});
+
+module.exports = { registerUser, loginUser, myAccount };

@@ -62,8 +62,8 @@ app.get("/alluser", (req, res) => {
 });
 
 
-app.use("/api/register", require("./routes/userRoutes")); // Registration route
-app.use("/api/login", require("./routes/userRoutes")); // Login route
+app.use("/api/user", require("./routes/userRoutes")); 
+
 
 // Route to handle file upload and save metadata in MongoDB
 app.post('/profile', upload.single('avatar'), async (req, res) => {
