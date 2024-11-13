@@ -63,6 +63,8 @@ app.get("/alluser", (req, res) => {
 
 
 app.use("/api/user", require("./routes/userRoutes")); 
+app.use("/api/newsletter",require("./routes/newsletterRoutes"));
+app.use("/api/doctor", require("./routes/doctorRoutes"));
 
 
 // Route to handle file upload and save metadata in MongoDB

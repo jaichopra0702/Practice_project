@@ -85,37 +85,52 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const myAccount = asyncHandler(async (req, res) => {
-    // The userId is available in req.user after successful token validation
     const userId = req.user.userId; // This comes from the 'validateJwtToken' middleware
 
-    // Fetch the user by the userId (from the decoded token)
-    const user = await User.findById(userId);
+    // Fetch the current user data
+    let user = await User.findById(userId);
 
     if (!user) {
         return res.status(404).json({ message: "User not found" });
     }
 
-    // Send the user information (excluding the password) in the response
-    // res.status(200).json({
-    //     user: {
-    //         id: user._id,
-    //         firstName: user.firstName,
-    //         lastName: user.lastName,
-    //         age: user.age,
-    //         gender: user.gender,
-    //         bloodGroup: user.bloodGroup,
-    //         email: user.email,
-    //         phoneNumber: user.phoneNumber,
-    //         createdAt: user.createdAt,
-    //         updatedAt: user.updatedAt
-    //     }
-    // });
+    // Save the current user data (before update) as previous data
+    const previousData = {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        age: user.age,
+        gender: user.gender,
+        bloodGroup: user.bloodGroup,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+    };
+
+    // Update the user's information with the new data from req.body
     Object.assign(user, req.body);
 
+    // Save the updated user to the database
     await user.save();
 
-    res.send(user);
-    
+    // Respond with both previous and updated user data, excluding the password
+    res.status(200).json({
+        message: "User details updated successfully",
+        previousData,
+        updatedData: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            age: user.age,
+            gender: user.gender,
+            bloodGroup: user.bloodGroup,
+            email: user.email,
+            phoneNumber: user.phoneNumber,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        },
+    });
 });
 
 module.exports = { registerUser, loginUser, myAccount };
+
